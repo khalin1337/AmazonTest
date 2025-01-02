@@ -1,24 +1,28 @@
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.WebDriverRunner;
-import com.codeborne.selenide.commands.As;
+import com.codeborne.selenide.SelenideElement;
 import dev.failsafe.internal.util.Assert;
-import org.openqa.selenium.WebDriver;
+import io.qameta.allure.Step;
+import org.openqa.selenium.By;
 import org.testng.annotations.*;
+
+import java.util.ArrayList;
+
 import static com.codeborne.selenide.Selenide.*;
 
 public class ResultPageTest {
-    ResultPage Result = ResultPage.getResultPage();
+    ResultPage result = ResultPage.getResultPage();
     @BeforeClass
-    public void SetUP(){
-        Result.OpenHomePage();
+    public void setUP(){
+        result.openHomePage();
     }
     @AfterClass
-    public void TearDown(){
+    @Step("Close browser")
+    public void tearDown(){
         closeWebDriver();
     }
     @Test
-    public void CheckNameTest(){
-        Assert.isTrue(Result.BooksJavaCheck(),String.format("Книга:\"%s\" не була знайдена на першій сторінці пошуку", Result.getNameNeededBook()));
+    public void checkNameTest(){
+        Assert.isTrue(result.booksJavaCheck(),
+                String.format("Книга:\"%s\" не була знайдена на першій сторінці пошуку",
+                        result.getNameNeededBook()));
     }
 }

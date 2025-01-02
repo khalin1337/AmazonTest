@@ -1,5 +1,6 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -20,25 +21,29 @@ public class HomePage {
         }
         return home;
     }
+
+    //Open Firefox and go to https://www.amazon.com/
+    @Step("Opening browser and go to Amazon")
+    public void openHomePage() {
+        Configuration.browser = "firefox";
+        open(Url);
+    }
+
     //Locators
-    public SelenideElement SearchingSubmitButton() {
+    public SelenideElement searchingSubmitButton() {
         return $(By.xpath("//input[@id='nav-search-submit-button']"));
     }
-    public SelenideElement SearchingPlate() {
+    public SelenideElement searchingPlate() {
         return $(By.xpath("//input[@id='twotabsearchtextbox']"));
     }
-    public SelenideElement CategorySelector() {
+    public SelenideElement categorySelector() {
         return $(By.xpath("//select[@id='searchDropdownBox']"));
     }
     //Search Java
-    public void SearchJavaInBooks() {
-        CategorySelector().selectOption("Books");
-        SearchingPlate().val("Java");
-        SearchingSubmitButton().click();
-    }
-    //Open Firefox and go to https://www.amazon.com/
-    public void OpenHomePage() {
-        Configuration.browser = "firefox";
-        open(Url);
+    @Step("Search Java in Books category")
+    public void searchJavaInBooks() {
+        categorySelector().selectOption("Books");
+        searchingPlate().val("Java");
+        searchingSubmitButton().click();
     }
 }
