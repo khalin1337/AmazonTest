@@ -35,27 +35,22 @@ public class HomePage {
     }
 
     //Locators
-    public SelenideElement searchingSubmitButton() {
-        return $(By.xpath("//input[@id='nav-search-submit-button']"));
-    }
-    public SelenideElement searchingBar() {
-        return $(By.xpath("//input[@id='twotabsearchtextbox']"));
-    }
-    public SelenideElement categorySelector() {
-        return $(By.xpath("//select[@id='searchDropdownBox']"));
-    }
+    SelenideElement searchingSubmitButton =  $(By.xpath("//input[@id='nav-search-submit-button']"));
+    SelenideElement searchingBar = $(By.xpath("//input[@id='twotabsearchtextbox']"));
+    SelenideElement categorySelector = $(By.xpath("//select[@id='searchDropdownBox']"));
+
     //Search Java
     @Step("Select category")
     public void selectCategory(String category) {
-        categorySelector().selectOption(category);
+        categorySelector.selectOption(category);
     }
     @Step("Fill search bar")
     public void fillSearchingBar(String name) {
-        searchingBar().val(name);
+        searchingBar.val(name);
     }
 
     @Step("Search Java in Books category")
     public void clickSearchingSubmitButton() {
-        searchingSubmitButton().click();
+        searchingSubmitButton.click();
     }
 }

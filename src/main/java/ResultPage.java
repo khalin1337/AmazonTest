@@ -3,16 +3,15 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.codeborne.selenide.Selenide.*;
 
 public class ResultPage extends HomePage {
     private static ResultPage result;
-    private String nameNeededBook;
-    public String getNameNeededBook() {
-        return this.nameNeededBook;
+    private Book neededBook;
+    public Book getNeededBook() {
+        return this.neededBook;
     }
     private ResultPage(){
         super();
@@ -25,11 +24,11 @@ public class ResultPage extends HomePage {
     }
 
     //Locators
-    public ElementsCollection getResults() {
-        return $$(By.xpath("//div[@role='listitem']"));
-    }
-    public List<String> getResultPrices(SelenideElement result) {
-        return result.$$(By.xpath(".//div[@class='a-row']/a[not(contains(span[text()],'to rent'))]/span[@class='a-price']/span[@class='a-offscreen']")).texts();
+    ElementsCollection results = $$(By.xpath("//div[@role='listitem']"));
+
+    //Methods to get info from elements
+    public ArrayList<String> getResultPrices(SelenideElement result) {
+        return (ArrayList<String>) result.$$(By.xpath(".//div[@class='a-row']/a[not(contains(span[text()],'to rent'))]/span[@class='a-price']/span[@class='a-offscreen']")).texts();
     }
     public String getResultName(SelenideElement result) {
         return result.$(By.xpath(".//h2//span")).text();
@@ -39,6 +38,7 @@ public class ResultPage extends HomePage {
     }
     public String getResultAuthorsName(SelenideElement result) {
         String temp = result.$(By.xpath(".//div[@class='a-row' and span[contains(text(),'by')]]")).text();
+        temp = temp.replace("and",",");
         int endIndex = temp.length();
         if (temp.contains("|")) endIndex = temp.lastIndexOf("|");
         return  temp.substring(temp.indexOf("by")+2,endIndex);
@@ -49,25 +49,33 @@ public class ResultPage extends HomePage {
     @Step("Create and fill List of books with names, authors`s names, prices and bestseller marks")
     public ArrayList<Book> fillBooks(){
         ArrayList<Book> books = new ArrayList<>();
-        for (SelenideElement result : getResults()) {
+        for (SelenideElement result : results) {
             books.add(new Book(getResultName(result),
                     getResultBestsellerMark(result),
                     getResultPrices(result),
-                    getResultAuthorsName(result)));
+                    getResultAuthorsName(result).trim()));
             System.out.println( books.getLast().toString() );
         }
         return books;
     }
 
     //Check to having https://a.co/d/3iWogjC in books
-    @Step("Get Name of book that needed to find")
-    public void takeNameNeededBook(String Url){
+    @Step("Get book that needed to find")
+    public Book getNeededBook(String Url){
         open(Url);
-        nameNeededBook = $(By.xpath("//span[@id='productTitle']")).text();
+        String name = $(By.xpath("//span[@id='productTitle']")).text();
+        ArrayList<String> price = new ArrayList<String>();
+        price.add($(By.xpath("//span/a//span[@class='a-size-base a-color-secondary']")).text());
+        String authors = $(By.xpath("//div[@id='bylineInfo']")).text();
+        boolean bestseller = !$(By.xpath("//div[@id='zeitgeistBadge_feature_div']")).text().isEmpty();
+        authors = authors.replace("(Author)","");
+        authors = authors.replace("by","");
+        authors = authors.trim();
+        return new Book(name,bestseller,price,authors);
     }
 
     @Step("Check if list of books contains needed book")
-    public boolean booksJavaCheck(ArrayList<Book> books) {
-        return books.stream().anyMatch(book -> book.getName().contains(this.nameNeededBook.trim()));
+    public boolean booksJavaCheck(ArrayList<Book> books, Book book) {
+        return books.contains(book);
     }
 }

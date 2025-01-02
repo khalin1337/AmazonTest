@@ -14,8 +14,6 @@ public class ResultPageTest {
         return new Object[][]{{name,category}};
     }
 
-
-
     @Test(dataProvider = "Keywords")
     public void checkNameTest(String name, String category){
         ResultPage result = ResultPage.getResultPage();
@@ -27,12 +25,13 @@ public class ResultPageTest {
         result.fillSearchingBar(name);
         result.clickSearchingSubmitButton();
         books = result.fillBooks();
-        result.takeNameNeededBook("https://a.co/d/3iWogjC");
-        isContainBook = result.booksJavaCheck(books);
+        Book book = result.getNeededBook("https://a.co/d/7nA98uH");
+        //Book book = books.get(1);
+        isContainBook = result.booksJavaCheck(books, book);
 
         Assert.isTrue(isContainBook,
-                String.format("Книга:\"%s\" не була знайдена на першій сторінці пошуку",
-                        result.getNameNeededBook()));
+                String.format("Книга:\n%s\nне була знайдена на першій сторінці пошуку",
+                        book.toString()));
 
         result.closeBrowser();
     }
