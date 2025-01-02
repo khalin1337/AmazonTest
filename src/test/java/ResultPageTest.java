@@ -25,7 +25,7 @@ public class ResultPageTest {
         result.fillSearchingBar(name);
         result.clickSearchingSubmitButton();
         books = result.fillBooks();
-        Book book = result.getNeededBook("https://a.co/d/7nA98uH");
+        Book book = result.getNeededBook("https://a.co/d/2W0yTbv");
         //Book book = books.get(1);
         isContainBook = result.booksJavaCheck(books, book);
 

@@ -39,6 +39,7 @@ public class ResultPage extends HomePage {
     public String getResultAuthorsName(SelenideElement result) {
         String temp = result.$(By.xpath(".//div[@class='a-row' and span[contains(text(),'by')]]")).text();
         temp = temp.replace("and",",");
+        temp = temp.replace(", et al.","");
         int endIndex = temp.length();
         if (temp.contains("|")) endIndex = temp.lastIndexOf("|");
         return  temp.substring(temp.indexOf("by")+2,endIndex);
@@ -68,7 +69,7 @@ public class ResultPage extends HomePage {
         price.add($(By.xpath("//span/a//span[@class='a-size-base a-color-secondary']")).text());
         String authors = $(By.xpath("//div[@id='bylineInfo']")).text();
         boolean bestseller = !$(By.xpath("//div[@id='zeitgeistBadge_feature_div']")).text().isEmpty();
-        authors = authors.replace("(Author)","");
+        authors = authors.replace(" (Author)","");
         authors = authors.replace("by","");
         authors = authors.trim();
         return new Book(name,bestseller,price,authors);
@@ -77,5 +78,7 @@ public class ResultPage extends HomePage {
     @Step("Check if list of books contains needed book")
     public boolean booksJavaCheck(ArrayList<Book> books, Book book) {
         return books.contains(book);
+        //return books.stream().anyMatch(b -> b.getName().contains(book.getName()));
+        //return books.stream().anyMatch(b -> book.equals(b));
     }
 }

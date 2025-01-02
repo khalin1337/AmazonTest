@@ -31,4 +31,11 @@ public class Book {
     public String toString() {
         return String.format("Назва: %s\nЧи є Бестселлером: %s\nАвтори: %s\nЦіни: %s",name, bestseller ? "Так" : "Ні", authorName, prices);
     }
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Book book)) {
+            return false;
+        }
+        return this.name.equals(book.getName()) && this.authorName.contains(book.getAuthorName()) && this.prices.equals(book.getPrices()) && this.bestseller == book.getBestsellerMark();
+    }
 }
