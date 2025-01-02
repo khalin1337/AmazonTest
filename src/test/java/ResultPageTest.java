@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class ResultPageTest {
 
-    @DataProvider(name = "Category")
+    @DataProvider(name = "Keywords")
     public Object[][] Category() {
         String category = System.getProperty("Category","Books");
         String name = System.getProperty("Name","Java");
@@ -16,7 +16,7 @@ public class ResultPageTest {
 
 
 
-    @Test(dataProvider = "Category")
+    @Test(dataProvider = "Keywords")
     public void checkNameTest(String name, String category){
         ResultPage result = ResultPage.getResultPage();
         ArrayList<Book> books;
