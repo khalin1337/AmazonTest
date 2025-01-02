@@ -48,7 +48,6 @@ public class ResultPage extends HomePage {
     //Fil ArrayList<Book>
     @Step("Create and fill List of books with names, authors`s names, prices and bestseller marks")
     public ArrayList<Book> fillBooks(){
-        searchJavaInBooks();
         ArrayList<Book> books = new ArrayList<>();
         for (SelenideElement result : getResults()) {
             books.add(new Book(getResultName(result),
@@ -68,10 +67,7 @@ public class ResultPage extends HomePage {
     }
 
     @Step("Check if list of books contains needed book")
-    public boolean booksJavaCheck() {
-        ArrayList<Book> books = fillBooks();
-        takeNameNeededBook("https://a.co/d/3iWogjC");//Замінив шукану книгу бо данної вами не було на першій сторінці пошуку
-        //TakeNameNeededBook("https://www.amazon.com/Head-First-Java-Kathy-Sierra/dp/0596009208/ref=sr_1_2?dchild=1&keywords=Java&qid=1610356790&s=books&sr=1-2");
-        return books.stream().anyMatch(book -> book.getName().contains(nameNeededBook.trim()));
+    public boolean booksJavaCheck(ArrayList<Book> books) {
+        return books.stream().anyMatch(book -> book.getName().contains(this.nameNeededBook.trim()));
     }
 }
